@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Data with Filters</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 70%;
+            margin: 20px auto;
+            text-align: center;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .filters {
+            text-align: center;
+            margin: 10px;
+        }
+        select {
+            padding: 5px;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Sales Data</h1>
+    <div class="filters">
+        <label for="regionFilter">Filter by Region:</label>
+        <select id="regionFilter">
+            <option value="all">All Regions</option>
+        </select>
+        <label for="modelFilter">Filter by Model:</label>
+        <select id="modelFilter">
+            <option value="all">All Models</option>
+        </select>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Region</th>
+                <th>Model</th>
+                <th>Sales</th>
+            </tr>
+        </thead>
+        <tbody id="sales-data"></tbody>
+    </table>
+
+    <script>
+        const data = [
+            { region: 'US', model: 'A', sales: 150 },
+            { region: 'US', model: 'B', sales: 120 },
+            { region: 'US', model: 'C', sales: 350 },
+            { region: 'EU', model: 'A', sales: 200 },
+            { region: 'EU', model: 'B', sales: 100 },
+            { region: 'EU', model: 'C', sales: 250 },
+            { region: 'CA', model: 'A', sales: 200 },
+            { region: 'CA', model: 'B', sales: 100 },
+            { region: 'CA', model: 'C', sales: 230 },
+            { region: 'CA', model: 'D', sales: 400 },
+        ];
+
+        // Populate dropdowns
+        const regions = [...new Set(data.map(item => item.region))];
+        const models = [...new Set(data.map(item => item.model))];
+
+        const regionFilter = document.getElementById('regionFilter');
+        const modelFilter = document.getElementById('modelFilter');
+
+        regions.forEach(region => {
+            const option = document.createElement('option');
+            option.value = region;
+            option.textContent = region;
+            regionFilter.appendChild(option);
+        });
+
+        models.forEach(model => {
+            const option = document.createElement('option');
+            option.value = model;
+            option.textContent = model;
+            modelFilter.appendChild(option);
+        });
+
+        // Render table
+        const tbody = document.getElementById('sales-data');
+
+        function renderTable(filteredData) {
+            tbody.innerHTML = '';
+            filteredData.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.region}</td>
+                    <td>${row.model}</td>
+                    <td>${row.sales}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function applyFilters() {
+            const selectedRegion = regionFilter.value;
+            const selectedModel = modelFilter.value;
+
+            let filteredData = data;
+
+            if (selectedRegion !== 'all') {
+                filteredData = filteredData.filter(item => item.region === selectedRegion);
+            }
+            if (selectedModel !== 'all') {
+                filteredData = filteredData.filter(item => item.model === selectedModel);
+            }
+
+            renderTable(filteredData);
+        }
+
+        // Initialize table and add event listeners
+        renderTable(data);
+
+        regionFilter.addEventListener('change', applyFilters);
+        modelFilter.addEventListener('change', applyFilters);
+    </script>
+</body>
+</html>

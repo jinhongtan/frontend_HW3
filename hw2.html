@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Data</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 50%;
+            margin: auto;
+            text-align: center;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Region</th>
+                <th>Model</th>
+                <th>Sales</th>
+            </tr>
+        </thead>
+        <tbody id="sales-data"></tbody>
+    </table>
+
+    <script>
+        const data = [
+            { region: 'US', model: 'A', sales: 150 },
+            { region: 'US', model: 'B', sales: 120 },
+            { region: 'US', model: 'C', sales: 350 },
+            { region: 'EU', model: 'A', sales: 200 },
+            { region: 'EU', model: 'B', sales: 100 },
+            { region: 'EU', model: 'C', sales: 250 },
+            { region: 'CA', model: 'A', sales: 200 },
+            { region: 'CA', model: 'B', sales: 100 },
+            { region: 'CA', model: 'C', sales: 230 },
+            { region: 'CA', model: 'D', sales: 400 },
+        ];
+
+        // Process data to calculate the 'sum' rows
+        const regions = [...new Set(data.map(item => item.region))];
+        const processedData = regions.map(region => {
+            const regionData = data.filter(item => item.region === region);
+            const totalSales = regionData.reduce((sum, item) => sum + item.sales, 0);
+            return [
+                { region, model: 'sum', sales: totalSales },
+                ...regionData
+            ];
+        }).flat();
+
+        // Display data in the table
+        const tbody = document.getElementById('sales-data');
+        processedData.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${row.region}</td>
+                <td>${row.model}</td>
+                <td>${row.sales}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    </script>
+</body>
+</html>
